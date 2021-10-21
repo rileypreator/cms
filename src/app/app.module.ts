@@ -10,6 +10,9 @@ import { DocumentListComponent } from './documents/document-list/document-list.c
 import { DocumentItemComponent } from './documents/document-list/document-item/document-item.component';
 import { DocumentDetailComponent } from './documents/document-detail/document-detail.component';
 import { DocumentsComponent } from './documents/documents.component';
+import { MessageItemComponent } from './messages/message-list/message-item/message-item.component';
+import { MessageEditComponent } from './messages/message-list/message-edit/message-edit.component';
+import { MessageListComponent } from './messages/message-list/message-list.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { DocumentsComponent } from './documents/documents.component';
     DocumentListComponent,
     DocumentItemComponent,
     DocumentDetailComponent,
-    DocumentsComponent
+    DocumentsComponent,
+    MessageItemComponent,
+    MessageEditComponent,
+    MessageListComponent
   ],
   imports: [
     BrowserModule
