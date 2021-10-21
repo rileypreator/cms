@@ -1,14 +1,14 @@
 <div class="panel panel-default">
     <div class="panel-heading" >
-        <h2>Contact Name</h2>
-        <img src="" alt="" class="img-responive">
-        <span class="">
+        <h2>{{contact.name}}</h2>
+        <img src="{{contact.imageUrl}}" alt="" class="img-responive">
+        <span class="" style="float: right">
                 <button class="btn btn-primary">Edit</button>
                 <button class="btn btn-danger">Delete</button>
         </span>
     </div>
     <div class="panel-body">
-        <h5><b>Email:</b></h5>
-        <h5><b>Phone:</b></h5>
+        <h5><b>Email:</b> {{contact.email}}</h5>
+        <h5><b>Phone:</b>{{contact.phone}}</h5>
     </div>
 </div>
