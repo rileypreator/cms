@@ -19,13 +19,7 @@ export class DocumentService {
   getDocument(id: string): Document {
 
     //get one specific document
-    this.documents.forEach(function (document) {
-      if (document.id == id) {
-        return document;
-      }
-    });
-
-    return null;
+    return this.documents.find((document) => document.id === id);
   }
 
   //gets an array of all the documents

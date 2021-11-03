@@ -18,14 +18,7 @@ export class ContactService {
 
   getContact(id: string): Contact {
 
-    //for every contact that equals the value, it will return the contact
-    this.contacts.forEach(function (contact) {
-      if (contact.id == id) {
-        return contact;
-      }
-    });
-
-    return null;
+    return this.contacts.find((contact) => contact.id === id);
   }
 
   getContacts() {
