@@ -13,6 +13,7 @@ export class ContactService {
     this.contacts = MOCKCONTACTS;
   }
 
+  //Event Emitter to use during injection for simplicity among the contact
   @Output() contactSelectedEvent = new EventEmitter<Contact>();
 
   getContact(id: string): Contact {
