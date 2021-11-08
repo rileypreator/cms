@@ -13,6 +13,9 @@ export class DocumentService {
 
   //Event Emitter to use during injection for simplicity among the contact
   @Output() documentSelectedEvent = new EventEmitter<Document>();
+
+  //Will select the change document
+  @Output() documentChangedEvent = new EventEmitter<Document[]>();
   
 
   //gets one specific document and returns it if found. If not, returns null
@@ -25,5 +28,20 @@ export class DocumentService {
   //gets an array of all the documents
   getDocuments() {
     return this.documents.slice();
+  }
+
+  //deletes the passed document from the array of documents
+  deleteDocument(document: Document) {
+    if (!document) {
+      return;
+    }
+
+    const pos = this.documents.indexOf(document);
+    if (pos < 0) {
+      return;
+    }
+
+    this.documents.splice(pos, 1);
+    this.documentChangedEvent.emit(this.documents.slice());
   }
 }

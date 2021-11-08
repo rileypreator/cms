@@ -8,19 +8,18 @@ import { DocumentService } from '../document.service';
   styleUrls: ['./document-list.component.css']
 })
 export class DocumentListComponent implements OnInit {
-
-  //Used to emit the selected document
-  onSelectedDocument(document: Document) {
-    this.documentsService.documentSelectedEvent.emit(document);
-  }
   
   //Mock array containing the required documents to display multiple on the webpage
   documents: Document[] = []
+  documentId: string= "";
 
   constructor(private documentsService: DocumentService) { }
 
   ngOnInit(): void {
     this.documents = this.documentsService.getDocuments();
+    this.documentsService.documentChangedEvent.subscribe((event) => {
+      this.documents = event;
+    });
   }
 
 }
