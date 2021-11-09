@@ -16,12 +16,28 @@ export class ContactService {
   //Event Emitter to use during injection for simplicity among the contact
   @Output() contactSelectedEvent = new EventEmitter<Contact>();
 
-  getContact(id: string): Contact {
+  //Will emite the changed Contact
+  @Output() contactChangedEvent = new EventEmitter<Contact[]>();
 
+  getContact(id: string): Contact {
     return this.contacts.find((contact) => contact.id === id);
   }
 
   getContacts() {
     return this.contacts.slice();
+  }
+
+  deleteContact(contact: Contact) {
+    if (!contact) {
+      return;
+    }
+
+    const pos = this.contacts.indexOf(contact);
+    if (pos < 0) {
+      return;
+    }
+
+    this.contacts.splice(pos, 1);
+    this.contactChangedEvent.emit(this.contacts.slice());
   }
 }
