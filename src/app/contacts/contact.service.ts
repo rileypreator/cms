@@ -11,9 +11,11 @@ export class ContactService {
   //Item to contain the contacts
   contacts: Contact[] = [];
   contactListChangedEvent = new Subject<Contact[]>();
-  
+  maxContactId: number;
+
   constructor() {
     this.contacts = MOCKCONTACTS;
+    this.maxContactId = this.getMaxId();
   }
 
   //Event Emitter to use during injection for simplicity among the contact
@@ -43,4 +45,51 @@ export class ContactService {
     this.contacts.splice(pos, 1);
     this.contactChangedEvent.emit(this.contacts.slice());
   }
-}
+
+  //Gets the lowest possible ID that can be used for the new document
+  getMaxId(): number {
+    let maxId = 0;
+
+    this.contacts.forEach((contact) => {
+      let currentId = parseInt(contact.id);
+
+      if (currentId > maxId) {
+        maxId = currentId;
+      }
+    });
+
+    return maxId;
+  }
+  
+  //Adds the newest contact with the lowest possible ID added to it
+  addContact(newContact: Contact) {
+    if (!newContact) {
+      return;
+    }
+
+    this.maxContactId++;
+    newContact.id = this.maxContactId.toString();
+
+    this.contacts.push(newContact);
+    let contactsListClone = this.contacts.slice();
+
+    this.contactListChangedEvent.next(contactsListClone);
+  }
+
+  //Updates an already created contract
+  updateContact(originalContact: Contact, newContact: Contact) {
+    if (!originalContact || !newContact) {
+      return;
+    }
+
+    let pos = this.contacts.indexOf(originalContact)
+    if (pos < 0) {
+      return;
+    }
+
+    newContact.id = originalContact.id;
+    this.contacts[pos] = newContact;
+    let contactsListClone = this.contacts.slice();
+    this.contactListChangedEvent.next(contactsListClone);
+  }
+ }
