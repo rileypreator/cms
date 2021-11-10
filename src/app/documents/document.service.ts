@@ -10,9 +10,12 @@ export class DocumentService {
   //variables for the class
   documents: Document[];
   documentListChangedEvent = new Subject<Document[]>();
-  
+  maxDocumentId: number;
+
+  //CONSTRUCTOR
   constructor() { 
     this.documents = MOCKDOCUMENTS;
+    this.maxDocumentId = this.getMaxId();
   }
 
   //Event Emitter to use during injection for simplicity among the contact
@@ -47,5 +50,53 @@ export class DocumentService {
 
     this.documents.splice(pos, 1);
     this.documentChangedEvent.emit(this.documents.slice());
+  }
+
+  //This will run in the constructor when created to get the max ID of the most recent document
+  getMaxId(): number {
+    let maxId = 0;
+
+    this.documents.forEach((document) => {
+      let currentId = parseInt(document.id)
+
+      if (currentId > maxId) {
+        maxId = currentId
+      }
+    });
+
+    return maxId;
+  }
+
+  //Adds a new document to the list of documents by creating a copy and assigning the next highest ID to the document
+  addDocument(newDocument: Document) {
+    if (!newDocument) {
+      return;
+    }
+
+    this.maxDocumentId++;
+    newDocument.id = this.maxDocumentId.toString();
+
+    this.documents.push(newDocument);
+    let documentsListClone = this.documents.slice()
+
+    this.documentListChangedEvent.next(documentsListClone);
+
+  }
+
+  //This updates an already existing document if changes are being made on it
+  updateDocument(originalDocument: Document, newDocument: Document) {
+    if (!originalDocument || !newDocument) {
+      return;
+    }
+
+    let pos = this.documents.indexOf(originalDocument);
+    if (pos > 0) {
+      return;
+    }
+
+    newDocument.id = originalDocument.id;
+    this.documents[pos] = newDocument;
+    let documentsListClone = this.documents.slice();
+    this.documentListChangedEvent.next(documentsListClone);
   }
 }
