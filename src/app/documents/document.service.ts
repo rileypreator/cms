@@ -90,7 +90,7 @@ export class DocumentService {
     }
 
     let pos = this.documents.indexOf(originalDocument);
-    if (pos > 0) {
+    if (pos < 0) {
       return;
     }
 
