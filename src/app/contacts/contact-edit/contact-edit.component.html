@@ -8,6 +8,7 @@
                         [ngModel]="contact?.name" #name="ngModel" required>
                 </div>
             </div>
+            <div class="alert alert-danger" *ngIf="(name.invalid && name.touched)">Enter a valid Name</div>
             <div class="row">
                 <div class="col-sm-12 form-group">
                     <label for="email">Email:</label>
@@ -49,7 +50,7 @@
 
                 </div>
             </div>
-            <div class="aler alert-danger" *ngIf="(name.invalid && name.touched) || (email.invalid && email.touched)">
+            <div class="alert alert-danger" *ngIf="(name.invalid && name.touched) || (email.invalid && email.touched)">
                 The Name and Email are required</div>
             <div class="row">
                 <div class="col-xs-12 btn-toolbar">
