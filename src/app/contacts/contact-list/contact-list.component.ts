@@ -13,6 +13,7 @@ export class ContactListComponent implements OnInit, OnDestroy {
   //Mock array for contacts
   contacts: Contact[] = [];
   subscription: Subscription;
+  term: string = null;
 
   constructor(private contactService: ContactService) { }
 
@@ -31,4 +32,7 @@ export class ContactListComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  search(value: string) {
+    this.term = value;
+  }
 }
