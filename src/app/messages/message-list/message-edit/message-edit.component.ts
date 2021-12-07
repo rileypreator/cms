@@ -29,7 +29,7 @@ export class MessageEditComponent implements OnInit {
     const msgTextValue = this.msgText.nativeElement.value;
 
     //Create a new message object
-    let newMessage = new Message("1", subjectValue, msgTextValue, this.currentSender);
+    let newMessage = new Message("", subjectValue, msgTextValue, this.currentSender);
     //emit the message to the array for the already made messages and add it to the array
     // this.addMessageEvent.emit(newMessage);
     this.messageservice.addMessage(newMessage);
