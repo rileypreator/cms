@@ -2,6 +2,7 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
 import { MOCKCONTACTS } from './MOCKCONTACTS';
 import { Contact } from './contact.model';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class ContactService {
   contactListChangedEvent = new Subject<Contact[]>();
   maxContactId: number;
 
-  constructor() {
+  constructor(private httpClient: HttpClient) {
     this.contacts = MOCKCONTACTS;
     this.maxContactId = this.getMaxId();
   }
@@ -28,8 +29,23 @@ export class ContactService {
     return this.contacts.find((contact) => contact.id === id);
   }
 
+  //gets the stored contacts via Firebase and loads them into the application.
   getContacts() {
-    return this.contacts.slice();
+    this.httpClient.get("https://cms-project-abe2d-default-rtdb.firebaseio.com/contacts.json")
+
+      //success method
+      .subscribe((contacts: Contact[]) => {
+        this.contacts = contacts;
+        this.maxContactId = this.getMaxId();
+        this.contacts.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+        this.contactListChangedEvent.next(this.contacts.slice());
+      },
+      //error method
+      (error: any) => {
+        console.log(error);
+      });
+
+      return this.contacts;
   }
 
   deleteContact(contact: Contact) {
@@ -43,7 +59,7 @@ export class ContactService {
     }
 
     this.contacts.splice(pos, 1);
-    this.contactChangedEvent.emit(this.contacts.slice());
+    this.storeContacts();
   }
 
   //Gets the lowest possible ID that can be used for the new document
@@ -73,7 +89,7 @@ export class ContactService {
     this.contacts.push(newContact);
     let contactsListClone = this.contacts.slice();
 
-    this.contactListChangedEvent.next(contactsListClone);
+    this.storeContacts();
   }
 
   //Updates an already created contract
@@ -90,6 +106,18 @@ export class ContactService {
     newContact.id = originalContact.id;
     this.contacts[pos] = newContact;
     let contactsListClone = this.contacts.slice();
-    this.contactListChangedEvent.next(contactsListClone);
+    this.storeContacts();
+  }
+
+  storeContacts() {
+    let JSONcontacts = JSON.stringify(this.contacts);
+
+    let headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    this.httpClient.put("https://cms-project-abe2d-default-rtdb.firebaseio.com/contacts.json", JSONcontacts,{headers: headers})
+      .subscribe(() => {
+        this.contactListChangedEvent.next(this.contacts.slice())
+      }
+      )
   }
  }
