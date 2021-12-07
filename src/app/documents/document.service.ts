@@ -2,18 +2,19 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 import { Document } from './document.model';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentService {
   //variables for the class
-  documents: Document[];
+  documents: Document[] = [];
   documentListChangedEvent = new Subject<Document[]>();
   maxDocumentId: number;
 
   //CONSTRUCTOR
-  constructor() { 
+  constructor(private httpClient: HttpClient) { 
     this.documents = MOCKDOCUMENTS;
     this.maxDocumentId = this.getMaxId();
   }
@@ -32,9 +33,25 @@ export class DocumentService {
     return this.documents.find((document) => document.id === id);
   }
 
-  //gets an array of all the documents
+  //gets an array of all the documents via Firebase
   getDocuments() {
-    return this.documents.slice();
+    this.httpClient.get("https://cms-project-abe2d-default-rtdb.firebaseio.com/documents.json")
+
+      //success method
+      .subscribe((documents: Document[]) => {
+        this.documents = documents;
+        this.maxDocumentId = this.getMaxId();
+        this.documents.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+        this.documentListChangedEvent.next(this.documents.slice());
+      },
+
+      //error method
+      (error: any) => {
+        console.log(error);
+      }
+      );
+
+      return this.documents;
   }
 
   //deletes the passed document from the array of documents
