@@ -74,10 +74,10 @@ export class DocumentService {
     let maxId = 0;
 
     this.documents.forEach((document) => {
-      let currentId = parseInt(document.id)
+      let currentId = parseInt(document.id);
 
       if (currentId > maxId) {
-        maxId = currentId
+        maxId = currentId;
       }
     });
 
