@@ -3,7 +3,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="row">
-                    <span class="title pad-left-right">Contacts</span>
+                    <span class="pull-left title">Contacts</span>
                 </div>
                 <div class="row">
                     <div class="input-group pull-left pad-left-right col-xs-7">
@@ -17,15 +17,14 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-12 margin-top">
-                        <app-contact-item *ngFor="let contact of contacts | contactsFilter: term" [contact]="contact"
-                            dnd-draggable [dragEnabled]="true" [dragData]="contact" [dropZones]="['contactGroup']">
-                        </app-contact-item>
-                    </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12 margin-top">
+                    <app-contact-item *ngFor="let contact of contacts | contactsFilter: term" [contact]="contact"
+                        dnd-draggable [dragEnabled]="true" [dragData]="contact" [dropZones]="['contactGroup']">
+                    </app-contact-item>
                 </div>
             </div>
         </div>
     </div>
-</div>
