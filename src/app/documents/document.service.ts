@@ -66,7 +66,7 @@ export class DocumentService {
     }
 
     this.documents.splice(pos, 1);
-    this.documentChangedEvent.emit(this.documents.slice());
+    this.storeDocuments()
   }
 
   //This will run in the constructor when created to get the max ID of the most recent document
@@ -96,7 +96,7 @@ export class DocumentService {
     this.documents.push(newDocument);
     let documentsListClone = this.documents.slice()
 
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments();
 
   }
 
@@ -114,6 +114,19 @@ export class DocumentService {
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
     let documentsListClone = this.documents.slice();
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments();
+  }
+
+  //stores the documents to firebase
+  storeDocuments() {
+    let JSONdocuments = JSON.stringify(this.documents);
+
+    let headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    this.httpClient.put("https://cms-project-abe2d-default-rtdb.firebaseio.com/documents.json", JSONdocuments,{headers: headers})
+      .subscribe(() => {
+        this.documentListChangedEvent.next(this.documents.slice())
+      }
+      )
   }
 }
